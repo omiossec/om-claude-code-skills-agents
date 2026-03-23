@@ -5,8 +5,9 @@ In this repo, I will list skills and agent for Claude Code (May work with GitHub
 ## SKILS
 
 - PowerShell-Module, to build module with Claude Code
+- bicep-best-practices, to create Azure Bicep template following best practices
 
-## Agent 
+## Agent
 
 - Security Code reviewer for PowerShell, pwsh-security-check.md
 

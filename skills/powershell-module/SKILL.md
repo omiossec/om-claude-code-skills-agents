@@ -9,6 +9,13 @@ argument-hint: "[check|fix]"
 
 This skill provides guidance and conventions for building PowerShell modules.
 
+## When to use this skill
+
+Use this skill when:
+- Writing new PowerShell modules
+- Reviewing existing PowerShell module code for quality issues
+- Asked to audit, refactor, or improve PowerShell modules
+    
 ## Trigger
 
 Use this skill when the user asks to:
