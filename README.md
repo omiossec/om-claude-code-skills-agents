@@ -6,6 +6,7 @@ In this repo, I will list skills and agent for Claude Code (May work with GitHub
 
 - PowerShell-Module, to build module with Claude Code
 - bicep-best-practices, to create Azure Bicep template following best practices
+- nxtools-dsc-linux, a skill to create DSC configurations for Linux
 
 ## Agent
 
