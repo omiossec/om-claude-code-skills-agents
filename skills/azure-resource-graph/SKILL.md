@@ -148,108 +148,15 @@ function Invoke-ResourceGraphQuery {
 ### Pagination with Skip Token
 Resource Graph returns a maximum of 1,000 rows per call. Use `-SkipToken` to retrieve all pages.
 
-```powershell
-function Get-AllResourceGraphResults {
-    param(
-        [Parameter(Mandatory)]
-        [string]$Query,
-        [string[]]$Subscriptions
-    )
+ See [skip-token.md](references/skip-token.md) for full example reference.
 
-    $results   = [System.Collections.Generic.List[object]]::new()
-    $skipToken = $null
 
-    do {
-        $params = @{ Query = $Query; First = 1000 }
-        if ($Subscriptions) { $params.Subscription = $Subscriptions }
-        if ($skipToken)     { $params.SkipToken    = $skipToken }
-
-        try {
-            $page = Search-AzGraph @params -ErrorAction Stop
-        }
-        catch {
-            Write-Error "Query failed: $($_.Exception.Message)"
-            return $results
-        }
-
-        $results.AddRange($page.Data)
-        $skipToken = $page.SkipToken
-
-    } while ($skipToken)
-
-    return $results
-}
-```
 
 ### Parallel Batch Processing
 Use `ForEach-Object -Parallel` to process large result sets concurrently. Set `-ThrottleLimit` to respect API throttling.
 
-```powershell
-$BatchQueries = @( 
-    @{ 
-        Query = "Resources | where type =~ 'Microsoft.Compute/virtualMachines'" 
-        Subscriptions = @("SUB_A") # Query 1 Scope 
-    }, 
-    @{ 
-        Query = "Resources | where type =~ 'Microsoft.Network/publicIPAddresses'" 
-        Subscriptions = @("SUB_B", "SUB_C") # Query 2 Scope 
-    } 
-) 
-$BatchResults = $BatchQueries | ForEach-Object -Parallel { 
-    $QueryConfig = $_ 
-    $Query = $QueryConfig.Query 
-    $Subs = $QueryConfig.Subscriptions 
-    
-    Write-Host "[Batch Worker] Starting query: $($Query.Substring(0, [Math]::Min(50, $Query.Length)))..." -ForegroundColor Cyan 
-    
-    $QueryResults = @() 
-    
-    # Process each subscription in this query's scope 
-    foreach ($SubId in $Subs) { 
-        $SkipToken = $null 
-        
-        do { 
-            $Params = @{ 
-                Query = $Query 
-                Subscription = $SubId 
-                First = 1000 
-            } 
-            
-            if ($SkipToken) { 
-                $Params['SkipToken'] = $SkipToken 
-            } 
-            
-            $Result = Search-AzGraph @Params 
-            
-            if ($Result) { 
-                $QueryResults += $Result 
-            } 
-            
-            $SkipToken = $Result.SkipToken 
-            
-        } while ($SkipToken) 
-    } 
+ See [paralle.md](references/paralle.md) for full example reference.
 
-    # Return results with metadata 
-    [PSCustomObject]@{ 
-        Query = $Query 
-        Subscriptions = $Subs 
-        Data = $QueryResults 
-        Count = $QueryResults.Count 
-    } 
-    
-} -ThrottleLimit 5 
-
-Write-Host "`nBatch complete. Reviewing results..." 
-
-# The results are returned in the same order as the input array 
-$VMCount = $BatchResults[0].Data.Count 
-$IPCount = $BatchResults[1].Data.Count 
-
-Write-Host "Query 1 (VMs) returned: $VMCount results." 
-Write-Host "Query 2 (IPs) returned: $IPCount results." 
-
-```
 
 ---
 
