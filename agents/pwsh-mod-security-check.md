@@ -1,6 +1,7 @@
 ---
-name: security-check
-description: Reviews PowerShell code for security issues such as injection risks, credential exposure, and unsafe API patterns specific to the psGTIssue module.
+name: pwsh-mod-security-check
+description: Reviews PowerShell Module code for security issues such as injection risks, credential exposure, and unsafe API patterns specific to the psGTIssue module.
+model: haiku
 ---
 
 # Security Check Agent
@@ -13,6 +14,15 @@ Review PowerShell source files in the `<module_name>` module for the following c
 Include any md and env file in the repository that may contain secrets or sensitive information.
 
 ## Checks to Perform
+
+### 0. Comment-Based Help
+
+Every file and function must contain a comment-based help block (`.SYNOPSIS` at minimum). Flag any script that is missing it. Except for class. Severity low if not found.
+
+- Missing `.SYNOPSIS`
+- Missing `.DESCRIPTION`
+- Missing `.PARAMETER` entries for each declared parameter
+- Missing `.EXAMPLE`
 
 ### 1. Credential and Token Exposure
 - Tokens or secrets hardcoded as string literals

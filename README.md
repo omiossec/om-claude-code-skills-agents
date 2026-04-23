@@ -13,7 +13,8 @@ In this repo, I will list skills and agent for Claude Code (May work with GitHub
 
 ## Agent
 
-- Security Code reviewer for PowerShell, pwsh-security-check.md
+- Security Code reviewer for PowerShell Module, pwsh-mod-security-check
+- Security Code reviewer for PowerShell Scripts, pwsh-script-security-check
 
 ### License
 
